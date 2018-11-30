@@ -65,7 +65,7 @@
             /**
              * check if we have communicated with this candidate.
              * */
-            let hasCommunicated = !!msg && msgs.find ? msgs.find(msg => msg.from.uid == hrId && msg.body.type == 1) : false;
+            let hasCommunicated = !!msgs && msgs.find ? msgs.find(msg => msg.from.uid == hrId && msg.body.type == 1) : false;
             if (!hasCommunicated) {
                 node.firstChild.click();
                 setTimeout(function (){
