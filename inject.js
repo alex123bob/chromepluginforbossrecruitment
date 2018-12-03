@@ -48,10 +48,67 @@
     }
 
     let listNodes = document.querySelectorAll(".user-list .main-list li"),
-        hrId = '5922502';
+        hrId = '5922502',
+        hrEmail = 'tanjiani@corp.netease.com';
 
     if (listNodes.length > 0) {
         listNodes = Array.prototype.slice.call(listNodes);
+    }
+
+    const RESPONSE_TYPE = {
+        NEED_GREETING: 1,
+        ASK_TO_SEND_RESUME: 2,
+        REQUEST_TO_SEND_RESUME: 3,
+        PICK_RESUME: 4,
+        DONE: 5
+    }
+
+    function reactToCandidate(msgs) {
+        if (!msgs || msgs.constructor != Array) {
+            return RESPONSE_TYPE.NEED_GREETING;
+        }
+        let notGreeted, greetedYetAskForResume, candidateRequestToSendResume, hasGotCandidateResume;
+        msgs = msgs.reverse();
+        for (let i = 0; i < msgs.length; i++) {
+            const msg = msgs[i];
+            if (msg.body.type == 12) {
+                hasGotCandidateResume = true;
+                break;
+            }
+            if (msg.body.type == 7) {
+                candidateRequestToSendResume = true;
+                break;
+            }
+        }
+
+        // Neither did we get candidate resume,
+        // nor did candidate request to send resume.
+        if (!hasGotCandidateResume && !candidateRequestToSendResume) {
+            if (msgs.filter(msg => msg.body.type == 1).length <= 0) {
+                notGreeted = true;
+            }
+            else if (
+                msgs.filter(msg => msg.body.type == 1 && msg.from.uid != hrId).length > 0 
+                && msgs.find(msg => msg.body.type == 1 && msg.body.text.indexOf(hrEmail) > -1) == undefined
+            ) {
+                greetedYetAskForResume = true;
+            }
+        }
+
+        if (notGreeted) {
+            return RESPONSE_TYPE.NEED_GREETING;
+        }
+        else if (greetedYetAskForResume) {
+            return RESPONSE_TYPE.ASK_TO_SEND_RESUME;
+        }
+        else if (candidateRequestToSendResume) {
+            console.log('PICK RESUME');
+            return RESPONSE_TYPE.PICK_RESUME;
+        }
+        else if (hasGotCandidateResume) {
+            console.log('HAS GOT RESUME');
+            return RESPONSE_TYPE.DONE;
+        }
     }
 
     function communicate(node){
@@ -60,23 +117,25 @@
             dataEid = node.firstChild.getAttribute('data-eid');
         let func = arguments.callee;
         fetch(`historymsg.json?gid=${dataUid}&maxMsgId=0&c=20&page=1`).then(res => res.json()).then(data => {
-            console.log('check Candidate ' + node.firstChild.lastChild.firstChild.childNodes[2].firstChild.nodeValue)
-            let msgs = data.messages;
-            /**
-             * check if we have communicated with this candidate.
-             * */
-            let hasCommunicated = !!msgs && msgs.find ? msgs.find(msg => msg.from.uid == hrId && msg.body.type == 1) : false;
-            if (!hasCommunicated) {
+            let candidateName = node.firstChild.lastChild.firstChild.childNodes[2].firstChild.nodeValue;
+            console.log('check Candidate ' + candidateName);
+            console.log(data.messages);
+            let response = reactToCandidate(data.messages);
+            if (response == RESPONSE_TYPE.NEED_GREETING || response == RESPONSE_TYPE.ASK_TO_SEND_RESUME) {
                 node.firstChild.click();
                 setTimeout(function (){
-                    document.querySelector('.detail-box .chat-message').innerHTML = '您好，如果感兴趣的话，请发送简历作品至tanjiani@corp.neteas.com';
+                    document.querySelector('.detail-box .chat-message').innerHTML = (response == RESPONSE_TYPE.NEED_GREETING ? '您好，我是网易HR，很高兴认识您!' : '您好，如果感兴趣的话，请发送简历作品至tanjiani@corp.neteas.com');
                     // document.querySelector('.detail-box .btn-send').click();
                     console.log('Click send for Candidate ' + node.firstChild.lastChild.firstChild.childNodes[2].firstChild.nodeValue);
                     func(listNodes.shift());
                 }, 300);
             }
             else {
-                func(listNodes.shift());
+                node.firstChild.click();
+                setTimeout(function (){
+                    document.querySelector('.detail-box .chat-message').innerHTML = '';
+                    func(listNodes.shift());
+                }, 300);
             }
         });
     }
