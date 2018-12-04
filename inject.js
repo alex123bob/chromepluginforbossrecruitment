@@ -112,23 +112,53 @@
     }
 
     function communicate(node){
-        if (!node) return;
+        if (!node) {
+            alert('完成');
+            return;
+        }
         let dataUid = node.firstChild.getAttribute('data-uid'),
             dataEid = node.firstChild.getAttribute('data-eid');
         let func = arguments.callee;
         fetch(`historymsg.json?gid=${dataUid}&maxMsgId=0&c=20&page=1`).then(res => res.json()).then(data => {
             let candidateName = node.firstChild.lastChild.firstChild.childNodes[2].firstChild.nodeValue;
             console.log('check Candidate ' + candidateName);
-            console.log(data.messages);
+            // let response = candidateName == '李嘉' ? reactToCandidate(data.messages) : '';
+            // let response = candidateName == '李嘉' ? RESPONSE_TYPE.ASK_TO_SEND_RESUME : '';
             let response = reactToCandidate(data.messages);
-            if (response == RESPONSE_TYPE.NEED_GREETING || response == RESPONSE_TYPE.ASK_TO_SEND_RESUME) {
+            if (response == RESPONSE_TYPE.NEED_GREETING) {
                 node.firstChild.click();
                 setTimeout(function (){
-                    document.querySelector('.detail-box .chat-message').innerHTML = (response == RESPONSE_TYPE.NEED_GREETING ? '您好，我是网易HR，很高兴认识您!' : '您好，如果感兴趣的话，请发送简历作品至tanjiani@corp.neteas.com');
-                    // document.querySelector('.detail-box .btn-send').click();
-                    console.log('Click send for Candidate ' + node.firstChild.lastChild.firstChild.childNodes[2].firstChild.nodeValue);
+                    document.querySelector('.detail-box .chat-message').innerHTML = '您好，我是网易HR，很高兴认识您!' ;
+                    document.querySelector('.detail-box .btn-send').click();
+                    console.log('Click send for Candidate ' + candidateName);
                     func(listNodes.shift());
                 }, 300);
+            }
+            else if (response == RESPONSE_TYPE.ASK_TO_SEND_RESUME) {
+                node.firstChild.click();
+                setTimeout(function (){
+                    document.querySelector('.detail-box .chat-message').innerHTML = '您好，如果感兴趣的话，请发送简历作品至tanjiani@corp.neteas.com';
+                    document.querySelector('.detail-box .btn-send').click();
+                    console.log('Click send for Candidate ' + candidateName);
+                    document.querySelector('.detail-box .btn-resume').click();
+                    setTimeout(function (){
+                        document.querySelector('[ka="dialog_confirm"]').click();
+                        console.log('Ask ' + candidateName + ' for Resume ');
+                        func(listNodes.shift());
+                    }, 100)
+                }, 300);
+            }
+            else if (response == RESPONSE_TYPE.PICK_RESUME) {
+                node.firstChild.click();
+                setTimeout(function (){
+                    let agreeBtn = document.querySelector('.detail-box .btn-agree')
+                    if (agreeBtn) {
+                        agreeBtn.click();
+                    }
+                    setTimeout(function (){
+                        func(listNodes.shift());
+                    }, 300);
+                }, 1000);
             }
             else {
                 node.firstChild.click();
