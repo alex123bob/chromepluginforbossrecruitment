@@ -1,8 +1,8 @@
 {
-    "name": "Chrome Extension For Boss Recruitment",
+    "name": "Personal Extension",
     "version": "1.0",
     "description": "Hey dude.",
-    "permissions": ["storage", "declarativeContent", "activeTab"],
+    "permissions": ["storage", "declarativeContent", "activeTab", "tabs", "webNavigation"],
     "manifest_version": 2,
     "background": {
         "scripts": ["background.js"],

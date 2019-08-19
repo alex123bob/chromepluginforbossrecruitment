@@ -9,12 +9,16 @@ chrome.runtime.onInstalled.addListener(function (){
         chrome.declarativeContent.onPageChanged.addRules([{
             conditions: [
                 new chrome.declarativeContent.PageStateMatcher({
-                    pageUrl: { hostEquals: 'www.zhipin.com' },
+                    pageUrl: { urlMatches: 'wenjuan\.com' },
                 })
             ],
             actions: [
                 new chrome.declarativeContent.ShowPageAction()
             ]
         }]);
+    });
+
+    chrome.webNavigation.onCompleted.addListener(function onCompleted(info) {
+        // alert(JSON.stringify(info));
     });
 });
