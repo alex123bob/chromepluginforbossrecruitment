@@ -25,24 +25,24 @@ function inject (){
         if (!foundInBuild.innerText) {
             setValidity(foundInBuildWrapper, false)
             evt.stopPropagation()
-            alert('Found in build is not filled')
+            $.notify('Found in build is not filled', 'error')
         }
         else if (ucProduct.innerText === pulldownDefaultVal) {
             setValidity(foundInBuildWrapper, true)
             setValidity(ucProductWrapper, false)
             evt.stopPropagation()
-            alert('UC Product is not filled')
+            $.notify('UC Product is not filled', 'error')
         }
         else if (upcModule.innerText === pulldownDefaultVal) {
             setValidity(foundInBuildWrapper, true)
             setValidity(ucProductWrapper, true)
             setValidity(upcModuleWrapper, false)
             evt.stopPropagation()
-            alert('UPC Module is not filled')
+            $.notify('UPC Module is not filled', 'error')
         }
     })
     menu.addEventListener('click', function(evt) {
-        alert(evt)
+        $.notify("Access granted", "success");
         // evt.preventDefault()
         evt.stopPropagation()
     })

@@ -59,7 +59,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 function createNewDefect(tabId) {
     if (!runtimeStorage[tabId] || !runtimeStorage[tabId]['createNewDefect']) {
         chrome.tabs.executeScript(tabId, {
-            file: 'createNewDefect.js',
+            file: 'libs/jquery-3.5.1.min.js',
+            runAt: 'document_start',
+            allFrames: false
+        })
+        chrome.tabs.executeScript(tabId, {
+            file: 'libs/notify.min.js',
+            runAt: 'document_end',
+            allFrames: false
+        })
+        chrome.tabs.executeScript(tabId, {
+            file: 'modules/createNewDefect.js',
             runAt: 'document_end',
             allFrames: false
         })
