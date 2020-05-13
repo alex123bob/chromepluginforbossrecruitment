@@ -1,3 +1,13 @@
+function setValidity (field, isValid){
+    if (isValid) {
+        field.classList.remove('is-invalid')
+    }
+    else {
+        field.classList.add('is-invalid')
+        field.scrollIntoView()
+    }
+}
+
 function inject (){
     let saveBtn = document.querySelector('.chr-QuickDetailEntityFooter-saveButton')
     let menu = document.querySelector('.chr-QuickDetailActionsMenu')
@@ -6,12 +16,29 @@ function inject (){
     console.log(saveBtn, menu)
 
     saveBtn.addEventListener('click', function(evt) {
-        let foundInBuild = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--foundInBuild .chr-QuickDetailAttributeEditorWrapper-editorContainer .smb-TextInput-renderedText')
-        let ucProduct = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--cUCProduct .chr-QuickDetailAttributeEditorWrapper-editorContainer  .smb-Select-text')
-        let upcModule = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--cUPCComponent .chr-QuickDetailAttributeEditorWrapper-editorContainer  .smb-Select-text')
-        if (!foundInBuild.innerText || ucProduct.innerText === pulldownDefaultVal || upcModule.innerText === pulldownDefaultVal) {
-            alert('field not completed')
+        let foundInBuildWrapper = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--foundInBuild')
+        let foundInBuild = foundInBuildWrapper.querySelector('.chr-QuickDetailAttributeEditorWrapper-editorContainer .smb-TextInput-renderedText')
+        let ucProductWrapper = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--cUCProduct')
+        let ucProduct = ucProductWrapper.querySelector('.chr-QuickDetailAttributeEditorWrapper-editorContainer  .smb-Select-text')
+        let upcModuleWrapper = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--cUPCComponent')
+        let upcModule = upcModuleWrapper.querySelector('.chr-QuickDetailAttributeEditorWrapper-editorContainer  .smb-Select-text')
+        if (!foundInBuild.innerText) {
+            setValidity(foundInBuildWrapper, false)
             evt.stopPropagation()
+            alert('Found in build is not filled')
+        }
+        else if (ucProduct.innerText === pulldownDefaultVal) {
+            setValidity(foundInBuildWrapper, true)
+            setValidity(ucProductWrapper, false)
+            evt.stopPropagation()
+            alert('UC Product is not filled')
+        }
+        else if (upcModule.innerText === pulldownDefaultVal) {
+            setValidity(foundInBuildWrapper, true)
+            setValidity(ucProductWrapper, true)
+            setValidity(upcModuleWrapper, false)
+            evt.stopPropagation()
+            alert('UPC Module is not filled')
         }
     })
     menu.addEventListener('click', function(evt) {
