@@ -1,13 +1,23 @@
 function inject (){
     let saveBtn = document.querySelector('.chr-QuickDetailEntityFooter-saveButton')
     let menu = document.querySelector('.chr-QuickDetailActionsMenu')
+    const pulldownDefaultVal = '-- No Entry --'
+
     console.log(saveBtn, menu)
 
     saveBtn.addEventListener('click', function(evt) {
-        alert(evt)
+        let foundInBuild = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--foundInBuild .chr-QuickDetailAttributeEditorWrapper-editorContainer .smb-TextInput-renderedText')
+        let ucProduct = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--cUCProduct .chr-QuickDetailAttributeEditorWrapper-editorContainer  .smb-Select-text')
+        let upcModule = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--cUPCComponent .chr-QuickDetailAttributeEditorWrapper-editorContainer  .smb-Select-text')
+        if (!foundInBuild.innerText || ucProduct.innerText === pulldownDefaultVal || upcModule.innerText === pulldownDefaultVal) {
+            alert('field not completed')
+            evt.stopPropagation()
+        }
     })
     menu.addEventListener('click', function(evt) {
         alert(evt)
+        // evt.preventDefault()
+        evt.stopPropagation()
     })
 }
 
