@@ -13,8 +13,6 @@ function inject (){
     let menu = document.querySelector('.chr-QuickDetailActionsMenu')
     const pulldownDefaultVal = '-- No Entry --'
 
-    console.log(saveBtn, menu)
-
     saveBtn.addEventListener('click', function(evt) {
         let foundInBuildWrapper = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--foundInBuild')
         let foundInBuild = foundInBuildWrapper.querySelector('.chr-QuickDetailAttributeEditorWrapper-editorContainer .smb-TextInput-renderedText')
@@ -59,12 +57,9 @@ function observeElement (){
         // Use traditional 'for loops' for IE 11
         for(let mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                // console.log('A child node has been added or removed.')
                 if (mutation.addedNodes.length > 0 && mutation.addedNodes[0].className === 'chr-QuickDetailActionsMenu') {
-                    
                     observer.disconnect()
                     inject()
-                    
                 }
             }
             else if (mutation.type === 'attributes') {

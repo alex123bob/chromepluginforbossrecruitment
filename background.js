@@ -80,10 +80,31 @@ function createNewDefect(tabId) {
     }
 }
 
+function customizeUI (tabId){
+    if (!runtimeStorage[tabId] || !runtimeStorage[tabId]['customizeUI']) {
+        chrome.tabs.executeScript(tabId, {
+            file: "modules/customizeUI.js",
+            runAt: 'document_end',
+            allFrames: false
+        })
+        if (!runtimeStorage[tabId]) {
+            runtimeStorage[tabId] = {}
+        }
+        runtimeStorage[tabId]['customizeUI'] = true
+    }
+}
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'loading' || !!changeInfo.url) {
         runtimeStorage[tabId] = {}
     }
+
+    if (changeInfo.status === 'complete') {
+        if (/rally1\.rallydev\.com/.test(tab.url)) {
+            customizeUI(tabId)
+        }
+    }
+
     if (/rally1\.rallydev\.com.*?defect\/new/.test(tab.url)) {
         createNewDefect(tabId)
     }
