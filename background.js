@@ -71,6 +71,9 @@ function createNewDefect(tabId) {
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'loading' || !!changeInfo.url) {
+        runtimeStorage[tabId] = {}
+    }
     if (/rally1\.rallydev\.com.*?defect\/new/.test(tab.url)) {
         createNewDefect(tabId)
     }
