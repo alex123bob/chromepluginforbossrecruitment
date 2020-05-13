@@ -1,2 +1,2 @@
-# chromepluginforbossrecruitment
-Chrome plugin
+# chrome extension for rally.
+Chrome extension
