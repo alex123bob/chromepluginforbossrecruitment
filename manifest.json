@@ -2,7 +2,7 @@
     "name": "Personal Extension",
     "version": "1.0",
     "description": "Hey dude.",
-    "permissions": ["storage", "declarativeContent", "activeTab", "tabs", "webNavigation"],
+    "permissions": ["storage", "declarativeContent", "activeTab", "tabs", "webNavigation", "debugger", "https://rally1.rallydev.com/"],
     "manifest_version": 2,
     "background": {
         "scripts": ["background.js"],
