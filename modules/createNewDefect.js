@@ -15,12 +15,12 @@ function inject (){
 
     saveBtn.addEventListener('click', function(evt) {
         let foundInBuildWrapper = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--foundInBuild')
-        let foundInBuild = foundInBuildWrapper.querySelector('.chr-QuickDetailAttributeEditorWrapper-editorContainer .smb-TextInput-renderedText')
+        let foundInBuild = foundInBuildWrapper.querySelector('.chr-QuickDetailAttributeEditorWrapper-editorContainer .smb-TextInput-input')
         let ucProductWrapper = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--cUCProduct')
         let ucProduct = ucProductWrapper.querySelector('.chr-QuickDetailAttributeEditorWrapper-editorContainer  .smb-Select-text')
         let upcModuleWrapper = document.querySelector('.chr-QuickDetailAttributeEditorWrapper--cUPCComponent')
         let upcModule = upcModuleWrapper.querySelector('.chr-QuickDetailAttributeEditorWrapper-editorContainer  .smb-Select-text')
-        if (!foundInBuild.innerText) {
+        if (!foundInBuild.value) {
             setValidity(foundInBuildWrapper, false)
             evt.stopPropagation()
             $.notify('Found in build is not filled', 'error')
